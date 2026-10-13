@@ -294,20 +294,18 @@ Toda leitura de tecla fica dentro de um laço `while`, que só termina quando a 
 
 ---
 
-## 👥 Integrantes
+## 👥 Integrantes  
 
-| Integrante |
-|---|---|
-| Rodrigo Alves |
-| João Victor Queiroz |
-| João Victor Nicacio |
-| João Guilherme Queiroz |
-| Danilo Barros |
-| Gustavo Cassemiro |
-| Daniel Luiz |
-| Fernando Araújo |
-| Lucas Collier |
-
+| Rodrigo Alves |  
+| João Victor Queiroz |  
+| João Victor Nicacio |  
+| João Guilherme Queiroz |  
+| Danilo Barros |  
+| Gustavo Cassemiro |  
+| Daniel Luiz |  
+| Fernando Araújo |  
+| Lucas Collier |  
+  
 ---
 
 ## 🚀 Proposta do projeto
