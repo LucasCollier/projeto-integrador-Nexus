@@ -220,7 +220,7 @@ O progresso pode ser salvo para que o jogador continue a aventura posteriormente
 | **Etapa 1 – PIF** | Núcleo imperativo em C: menu principal e Fase 1 (Central da Verdade) jogáveis do início ao fim | ✅ Concluída |
 | Próximas etapas | Fase 2, Fase 3, Fase Final, salvamento em arquivo e regras/pontuação em Haskell | 🔜 Em desenvolvimento |
 
-Nesta etapa, todo o código está no arquivo `nexus.c`, na raiz do repositório.
+Nesta etapa, todo o código está no arquivo `nexus.c`, na pasta src.
 
 ---
 
@@ -245,7 +245,7 @@ Vá em **Terminal > Novo Terminal** (*Terminal > New Terminal*) ou use o atalho 
 No terminal, digite:
 
 ```bash
-gcc -Wall -Wextra -std=c99 nexus.c -o nexus.exe
+gcc -Wall -Wextra -std=c99 src/nexus.c -o nexus.exe
 ```
 
 O código compila **sem erros e sem avisos (warnings)**, mesmo com as opções `-Wall -Wextra`. Depois da compilação, o arquivo `nexus.exe` aparece na pasta do projeto.
