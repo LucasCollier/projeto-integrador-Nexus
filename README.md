@@ -231,7 +231,7 @@ Nesta etapa, todo o código está no arquivo `nexus.c`, na raiz do repositório.
 Clone o repositório:
 
 ```bash
-git clone <URL-DO-REPOSITORIO>
+git clone <https://github.com/joaollima7/projeto-integrador-Nexus.git>
 ```
 
 No VS Code, vá em **Arquivo > Abrir Pasta...** (*File > Open Folder...*) e selecione a pasta do repositório.
