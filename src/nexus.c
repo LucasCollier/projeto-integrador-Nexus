@@ -153,9 +153,11 @@ int main(void) {
     /* ---------------- Progresso da Fase 1 ---------------- */
     int pistaEncontrada = 0;             /* jogador ja leu a pista?         */
     int etapaComputador1 = 0;            /* 0 = julgar p, 1 = julgar ~p     */
+    int linhaTabela = 0;                 /* linha atual da tabela no C2     */
     int computador1Resolvido = 0;
     int computador2Resolvido = 0;
     int portaAberta = 0;                 /* porta D: C1 E C2 resolvidos     */
+    int respostasIncorretas = 0;         /* usado no resumo da fase         */
 
     /* ---------------- Controle do jogo ---------------- */
     int telaAtual = TELA_MENU;           /* tela exibida neste momento      */
@@ -183,6 +185,7 @@ int main(void) {
     int objetoLinha, objetoColuna, objetoLargura;
     int objetoAtivo, pertoDoObjeto;
     char respostaEsperada;
+    int linhaExibida, valorP, valorQ;    /* linhas da tabela-verdade        */
 
     /* ========================================================================
      * GAME LOOP: repete ate o jogador escolher sair
@@ -204,9 +207,11 @@ int main(void) {
             chaveDaVerdade = 0;
             pistaEncontrada = 0;
             etapaComputador1 = 0;
+            linhaTabela = 0;
             computador1Resolvido = 0;
             computador2Resolvido = 0;
             portaAberta = 0;
+            respostasIncorretas = 0;
             tentouMover = 0;
             mensagem = MSG_NENHUMA;
             reiniciarJogo = 0;
@@ -386,6 +391,38 @@ int main(void) {
                 printf("  [E] Voltar ao mapa\n");
             }
 
+        } else if (telaAtual == TELA_COMPUTADOR2) {
+            /* ---------- COMPUTADOR C2 - filtro de confianca (US07) ---------- */
+            printf("  COMPUTADOR C2 - FILTRO DE CONFIANCA\n");
+            printf(LINHA_FINA);
+            printf("  Uma resposta da IA so e CONFIAVEL se:\n");
+            printf("    p = \"a resposta cita uma fonte\"\n");
+            printf("    q = \"o dado confere com as pistas\"\n");
+            printf("    confiavel = p ^ q   (conjuncao \"E\"; em C: p && q)\n\n");
+            printf("  Complete a ultima coluna da tabela-verdade:\n\n");
+            printf("       p | q | p ^ q\n");
+            printf("      ---+---+-------\n");
+            for (linhaExibida = 0; linhaExibida < LINHAS_TABELA; linhaExibida++) {
+                valorP = (linhaExibida < 2);           /* linhas 0 e 1: p = V */
+                valorQ = (linhaExibida % 2 == 0);      /* linhas pares: q = V */
+                printf("       %c | %c |   ", valorP ? 'V' : 'F', valorQ ? 'V' : 'F');
+                if (linhaExibida < linhaTabela) {
+                    printf("%c\n", (valorP && valorQ) ? 'V' : 'F');   /* ja respondida */
+                } else if (linhaExibida == linhaTabela) {
+                    printf("?   <- sua vez\n");
+                } else {
+                    printf("?\n");
+                }
+            }
+
+            if (linhaTabela < LINHAS_TABELA) {
+                printf("\n  Qual o valor de p ^ q nessa linha?\n");
+                printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            } else {
+                printf("\n  FILTRO CORRIGIDO! A porta D foi destrancada.\n\n");
+                printf("  [E] Voltar ao mapa\n");
+            }
+
         } else if (telaAtual == TELA_INVENTARIO) {
             /* ---------- INVENTARIO (tecla I) ---------- */
             printf("  INVENTARIO\n");
@@ -397,6 +434,37 @@ int main(void) {
             printf("   Computadores corrigidos: %d/2\n", computador1Resolvido + computador2Resolvido);
             printf("   Porta D:                 %s\n\n", portaAberta ? "aberta" : "trancada");
             printf("  [I] Fechar inventario\n");
+
+        } else if (telaAtual == TELA_CHAVE) {
+            /* ---------- CHAVE DA VERDADE (US07) ---------- */
+            printf("  *** CHAVE DA VERDADE OBTIDA! ***  (+%d pontos)\n\n", PONTOS_CHAVE);
+            printf("  A Central da Verdade voltou a funcionar.\n\n");
+            printf("  Licao: uma IA pode \"alucinar\" e afirmar algo falso com\n");
+            printf("  confianca. Sempre confira as respostas com fontes e\n");
+            printf("  informacoes confiaveis.\n\n");
+            printf("  [E] Continuar\n");
+
+        } else if (telaAtual == TELA_FIM_FASE) {
+            /* ---------- FIM DA FASE - jogar novamente? ---------- */
+            printf(SEPARADOR);
+            printf("  FASE 1 CONCLUIDA!\n");
+            printf(SEPARADOR);
+            printf("  Pontuacao:            %d de %d pontos\n", pontos, PONTUACAO_MAXIMA);
+            printf("  Respostas incorretas: %d\n", respostasIncorretas);
+            printf("  Desempenho:           ");
+            if (respostasIncorretas == 0) {
+                printf("perfeito!\n\n");
+            } else if (respostasIncorretas <= 2) {
+                printf("muito bom!\n\n");
+            } else {
+                printf("continue praticando!\n\n");
+            }
+            printf("  As fases 2 (Setor de Privacidade) e 3 (Nucleo da\n");
+            printf("  Justica) estarao disponiveis nas proximas etapas.\n\n");
+            printf("  Deseja jogar novamente?\n");
+            printf("    [1] Jogar novamente\n");
+            printf("    [2] Voltar ao menu\n");
+            printf("    [3] Sair do jogo\n");
 
         } else if (telaAtual == TELA_CONFIRMAR_SAIDA) {
             /* ---------- CONFIRMAR SAIDA ---------- */
@@ -597,8 +665,18 @@ int main(void) {
                     } else {
                         mensagem = MSG_C1_BLOQUEADO;
                     }
+                } else if (objetoProximo == OBJ_COMPUTADOR2) {
+                    if (computador1Resolvido) {
+                        telaAtual = TELA_COMPUTADOR2;
+                    } else {
+                        mensagem = MSG_C2_BLOQUEADO;
+                    }
                 } else if (objetoProximo == OBJ_PORTA) {
                     mensagem = MSG_PORTA_TRANCADA;
+                } else if (objetoProximo == OBJ_CHAVE) {
+                    chaveDaVerdade = 1;
+                    pontos += PONTOS_CHAVE;
+                    telaAtual = TELA_CHAVE;
                 } else {
                     mensagem = MSG_NADA_PROXIMO;
                 }
@@ -629,12 +707,51 @@ int main(void) {
                         pontos += PONTOS_COMPUTADOR;
                     }
                 } else {
+                    respostasIncorretas++;
                     mensagem = (etapaComputador1 == 0) ? MSG_ERRO_P : MSG_ERRO_NAO_P;
+                }
+            }
+
+        } else if (telaAtual == TELA_COMPUTADOR2) {
+            /* Completar a tabela-verdade de p ^ q, uma linha por vez */
+            if (tecla == 'Q' || tecla == 'E') {
+                telaAtual = TELA_MAPA;
+            } else {
+                valorP = (linhaTabela < 2);
+                valorQ = (linhaTabela % 2 == 0);
+                respostaEsperada = (valorP && valorQ) ? 'V' : 'F';
+                if (tecla == respostaEsperada) {
+                    linhaTabela++;
+                    mensagem = MSG_ACERTO;
+                    if (linhaTabela == LINHAS_TABELA) {
+                        computador2Resolvido = 1;
+                        pontos += PONTOS_COMPUTADOR;
+                        /* Regra da porta (conjuncao): abre se C1 E C2 corrigidos */
+                        portaAberta = computador1Resolvido && computador2Resolvido;
+                        mensagem = MSG_PORTA_ABERTA;
+                    }
+                } else {
+                    respostasIncorretas++;
+                    mensagem = MSG_ERRO_TABELA;
                 }
             }
 
         } else if (telaAtual == TELA_INVENTARIO) {
             telaAtual = TELA_MAPA;
+
+        } else if (telaAtual == TELA_CHAVE) {
+            telaAtual = TELA_FIM_FASE;
+
+        } else if (telaAtual == TELA_FIM_FASE) {
+            /* 1 = jogar novamente, 2 = menu, 3 = sair */
+            if (tecla == '1') {
+                reiniciarJogo = 1;
+                telaAtual = TELA_MAPA;
+            } else if (tecla == '2') {
+                telaAtual = TELA_MENU;
+            } else {
+                telaAtual = TELA_ENCERRAR;
+            }
 
         } else if (telaAtual == TELA_CONFIRMAR_SAIDA) {
             /* S confirma; N volta para a tela de origem */
