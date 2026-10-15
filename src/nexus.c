@@ -184,6 +184,7 @@ int main(void) {
     int objeto, objetoProximo;
     int objetoLinha, objetoColuna, objetoLargura;
     int objetoAtivo, pertoDoObjeto;
+    int objetoAoLado, aoLadoDoObjeto;    /* ao lado tem prioridade (B1)     */
     char respostaEsperada;
     int linhaExibida, valorP, valorQ;    /* linhas da tabela-verdade        */
 
@@ -618,6 +619,7 @@ int main(void) {
                 /* Interacao: procura um objeto ativo ao redor do jogador.
                  * Um unico laco testa todos os objetos (DRY). */
                 objetoProximo = OBJ_NENHUM;
+                objetoAoLado = OBJ_NENHUM;
                 for (objeto = 1; objeto <= TOTAL_OBJETOS; objeto++) {
                     objetoLargura = 1;
                     objetoAtivo = 1;
@@ -649,9 +651,23 @@ int main(void) {
                                     jogadorColuna >= objetoColuna - 1 &&
                                     jogadorColuna <= objetoColuna + objetoLargura;
 
-                    if (objetoProximo == OBJ_NENHUM && objetoAtivo && pertoDoObjeto) {
+                    /* "ao lado" = vizinho na mesma linha ou na mesma coluna do objeto */
+                    aoLadoDoObjeto = pertoDoObjeto &&
+                                     (jogadorLinha == objetoLinha ||
+                                      (jogadorColuna >= objetoColuna &&
+                                       jogadorColuna < objetoColuna + objetoLargura));
+
+                    if (objetoAoLado == OBJ_NENHUM && objetoAtivo && aoLadoDoObjeto) {
+                        objetoAoLado = objeto;
+                    } else if (objetoProximo == OBJ_NENHUM && objetoAtivo && pertoDoObjeto) {
                         objetoProximo = objeto;
                     }
+                }
+
+                /* Objeto ao lado tem prioridade sobre objeto na diagonal:
+                 * em (5,8) o jogador esta colado ao C2 e na diagonal do C1. */
+                if (objetoAoLado != OBJ_NENHUM) {
+                    objetoProximo = objetoAoLado;
                 }
 
                 /* Reacao ao objeto encontrado, respeitando a ordem da fase */
