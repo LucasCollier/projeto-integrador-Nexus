@@ -579,12 +579,15 @@ int main(void) {
                 entradaValida = (tecla == 'S' || tecla == 'N');
             }
 
-            /* Aviso para teclas invalidas (espacos, ENTER e setas nao contam) */
+            /* Aviso para teclas invalidas (espacos, ENTER e setas nao contam).
+             * O '\r' reescreve sempre a mesma linha, sem empurrar o mapa, e
+             * teclas de controle (ESC, Backspace...) aparecem como '?'. */
             if (!entradaValida && tecla != ' ' && tecla != '\n' &&
                 tecla != '\r' && tecla != '\t') {
                 tentativasInvalidas++;
-                printf("  Tecla '%c' invalida! Tente novamente. (avisos: %d)\n",
-                       tecla, tentativasInvalidas);
+                printf("\r  Tecla '%c' invalida! Tente novamente. (avisos: %d)   ",
+                       (tecla >= ' ' && tecla <= '~') ? tecla : '?',
+                       tentativasInvalidas);
             }
         }
 
