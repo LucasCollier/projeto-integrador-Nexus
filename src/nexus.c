@@ -29,6 +29,7 @@
 #include <stdlib.h>   /* system("cls"): limpa a tela do terminal do Windows */
 #include <conio.h>    /* _getch(): le uma tecla na hora, sem precisar de ENTER */
 #include "jogo.h"     /* structs com o estado da partida e da interface */
+#include "mapa.h"     /* mapa da Fase 1 e objetos interativos */
 
 /* ----------------------------------------------------------------------------
  * LEITURA DE TECLAS (Windows)
@@ -73,58 +74,6 @@
 #define MSG_ERRO_NAO_P      9
 #define MSG_ERRO_TABELA     10
 #define MSG_PORTA_ABERTA    11
-
-/* ----------------------------------------------------------------------------
- * OBJETOS COM QUE O JOGADOR PODE INTERAGIR (tecla E)
- * -------------------------------------------------------------------------- */
-#define OBJ_NENHUM       0
-#define OBJ_PISTA        1
-#define OBJ_COMPUTADOR1  2
-#define OBJ_COMPUTADOR2  3
-#define OBJ_PORTA        4
-#define OBJ_CHAVE        5
-#define TOTAL_OBJETOS    5
-
-/* ----------------------------------------------------------------------------
- * MAPA DA FASE 1 (7 linhas x 24 colunas)
- * Em vez de guardar o mapa em uma matriz, cada posicao (linha, coluna) e
- * "calculada" por regras com if/else. Assim, o mesmo conjunto de regras
- * serve para desenhar o mapa E para testar colisoes.
- *
- *      # # # # # # # # # # # # # # # # # # # # # # # #
- *      # P . . . . . ? . . . . . . . # . . . . . . . #
- *      # . # # # # . . . . . . . . . # . . . K . . . #
- *      # . # . . . . . . . . . . . . D . . . . . . . #
- *      # . # . . . C 1 . . . . . . . # . . . . . . . #
- *      # . . . . . . . . C 2 . . . . # . . . . . . . #
- *      # # # # # # # # # # # # # # # # # # # # # # # #
- * -------------------------------------------------------------------------- */
-#define ALTURA_MAPA       7
-#define LARGURA_MAPA      24
-#define COLUNA_DIVISORIA  15   /* parede que separa a sala da chave         */
-
-#define INICIO_LINHA      1    /* posicao inicial do jogador                */
-#define INICIO_COLUNA     1
-#define PISTA_LINHA       1
-#define PISTA_COLUNA      7
-#define C1_LINHA          4    /* computador C1 ocupa 2 casas: 'C' e '1'    */
-#define C1_COLUNA         6
-#define C2_LINHA          5    /* computador C2 ocupa 2 casas: 'C' e '2'    */
-#define C2_COLUNA         9
-#define PORTA_LINHA       3
-#define PORTA_COLUNA      COLUNA_DIVISORIA
-#define CHAVE_LINHA       2
-#define CHAVE_COLUNA      19
-
-/* Simbolos do mapa */
-#define JOGADOR       'P'
-#define PAREDE        '#'
-#define CHAO          '.'
-#define PISTA         '?'
-#define COMPUTADOR    'C'
-#define CHAVE         'K'
-#define PORTA         'D'
-#define PORTA_ABERTA  '/'
 
 /* ----------------------------------------------------------------------------
  * PONTUACAO E REGRAS DA FASE
@@ -190,10 +139,7 @@ int main(void) {
     char celulaDestino = CHAO;           /* simbolo na casa de destino      */
 
     /* ---------------- Interacao e computadores ---------------- */
-    int objeto, objetoProximo;
-    int objetoLinha, objetoColuna, objetoLargura;
-    int objetoAtivo, pertoDoObjeto;
-    int objetoAoLado, aoLadoDoObjeto;    /* ao lado tem prioridade (B1)     */
+    int objetoProximo;                   /* objeto alcancado com a tecla E  */
     char respostaEsperada;
     int linhaExibida, valorP, valorQ;    /* linhas da tabela-verdade        */
 
@@ -304,31 +250,7 @@ int main(void) {
                     }
                     for (coluna = 0; coluna < LARGURA_MAPA; coluna++) {
                         /* Regras do mapa: qual simbolo existe nesta posicao? */
-                        if (linha == 0 || linha == ALTURA_MAPA - 1 ||
-                            coluna == 0 || coluna == LARGURA_MAPA - 1) {
-                            celula = PAREDE;                      /* bordas */
-                        } else if ((linha == 2 && coluna >= 2 && coluna <= 5) ||
-                                   (coluna == 2 && linha >= 3 && linha <= 4)) {
-                            celula = PAREDE;                      /* paredes internas */
-                        } else if (linha == PORTA_LINHA && coluna == PORTA_COLUNA) {
-                            celula = partida->portaAberta ? PORTA_ABERTA : PORTA;
-                        } else if (coluna == COLUNA_DIVISORIA) {
-                            celula = PAREDE;
-                        } else if (linha == PISTA_LINHA && coluna == PISTA_COLUNA && !partida->pistaEncontrada) {
-                            celula = PISTA;                       /* some depois de lida */
-                        } else if (linha == C1_LINHA && coluna == C1_COLUNA) {
-                            celula = COMPUTADOR;
-                        } else if (linha == C1_LINHA && coluna == C1_COLUNA + 1) {
-                            celula = '1';
-                        } else if (linha == C2_LINHA && coluna == C2_COLUNA) {
-                            celula = COMPUTADOR;
-                        } else if (linha == C2_LINHA && coluna == C2_COLUNA + 1) {
-                            celula = '2';
-                        } else if (linha == CHAVE_LINHA && coluna == CHAVE_COLUNA && !partida->chaveDaVerdade) {
-                            celula = CHAVE;                       /* some depois de coletada */
-                        } else {
-                            celula = CHAO;
-                        }
+                        celula = celulaDoMapa(partida, linha, coluna);
 
                         if (passo == 0) {
                             /* guarda o simbolo da casa para onde o jogador quer ir */
@@ -628,59 +550,9 @@ int main(void) {
                 partida->tentouMover = 1;
 
             } else if (tecla == 'E') {
-                /* Interacao: procura um objeto ativo ao redor do jogador.
-                 * Um unico laco testa todos os objetos (DRY). */
-                objetoProximo = OBJ_NENHUM;
-                objetoAoLado = OBJ_NENHUM;
-                for (objeto = 1; objeto <= TOTAL_OBJETOS; objeto++) {
-                    objetoLargura = 1;
-                    objetoAtivo = 1;
-                    if (objeto == OBJ_PISTA) {
-                        objetoLinha = PISTA_LINHA;
-                        objetoColuna = PISTA_COLUNA;
-                        objetoAtivo = !partida->pistaEncontrada;
-                    } else if (objeto == OBJ_COMPUTADOR1) {
-                        objetoLinha = C1_LINHA;
-                        objetoColuna = C1_COLUNA;
-                        objetoLargura = 2;
-                    } else if (objeto == OBJ_COMPUTADOR2) {
-                        objetoLinha = C2_LINHA;
-                        objetoColuna = C2_COLUNA;
-                        objetoLargura = 2;
-                    } else if (objeto == OBJ_PORTA) {
-                        objetoLinha = PORTA_LINHA;
-                        objetoColuna = PORTA_COLUNA;
-                        objetoAtivo = !partida->portaAberta;
-                    } else {
-                        objetoLinha = CHAVE_LINHA;
-                        objetoColuna = CHAVE_COLUNA;
-                        objetoAtivo = partida->portaAberta && !partida->chaveDaVerdade;
-                    }
-
-                    /* "perto" = em qualquer casa vizinha (inclui diagonais) */
-                    pertoDoObjeto = partida->jogadorLinha >= objetoLinha - 1 &&
-                                    partida->jogadorLinha <= objetoLinha + 1 &&
-                                    partida->jogadorColuna >= objetoColuna - 1 &&
-                                    partida->jogadorColuna <= objetoColuna + objetoLargura;
-
-                    /* "ao lado" = vizinho na mesma linha ou na mesma coluna do objeto */
-                    aoLadoDoObjeto = pertoDoObjeto &&
-                                     (partida->jogadorLinha == objetoLinha ||
-                                      (partida->jogadorColuna >= objetoColuna &&
-                                       partida->jogadorColuna < objetoColuna + objetoLargura));
-
-                    if (objetoAoLado == OBJ_NENHUM && objetoAtivo && aoLadoDoObjeto) {
-                        objetoAoLado = objeto;
-                    } else if (objetoProximo == OBJ_NENHUM && objetoAtivo && pertoDoObjeto) {
-                        objetoProximo = objeto;
-                    }
-                }
-
-                /* Objeto ao lado tem prioridade sobre objeto na diagonal:
-                 * em (5,8) o jogador esta colado ao C2 e na diagonal do C1. */
-                if (objetoAoLado != OBJ_NENHUM) {
-                    objetoProximo = objetoAoLado;
-                }
+                /* Interacao: procura um objeto ativo ao redor do jogador
+                 * (ao lado tem prioridade sobre a diagonal - ver mapa.c). */
+                objetoProximo = procurarObjetoProximo(partida);
 
                 /* Reacao ao objeto encontrado, respeitando a ordem da fase */
                 if (objetoProximo == OBJ_PISTA) {
