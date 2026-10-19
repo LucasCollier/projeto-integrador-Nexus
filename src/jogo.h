@@ -10,12 +10,60 @@
  *    - Jogo:            reune os dois estados em uma unica variavel
  *
  *  Variaveis temporarias (tecla lida, contadores de laco, calculos do mapa)
- *  continuam como variaveis locais em nexus.c.
+ *  continuam como variaveis locais.
+ *
+ *  Tambem ficam aqui as constantes de telas, mensagens e regras da fase,
+ *  usadas por nexus.c e terminal.c.
  * ============================================================================
  */
 
 #ifndef JOGO_H
 #define JOGO_H
+
+/* ----------------------------------------------------------------------------
+ * TELAS DO JOGO
+ * O jogo e uma "maquina de estados": telaAtual guarda em qual tela o jogador
+ * esta. Cada tela tem um numero (constante) diferente.
+ * -------------------------------------------------------------------------- */
+#define TELA_MENU             0   /* menu inicial (US01)                      */
+#define TELA_INSTRUCOES       1   /* lista de comandos (US02)                 */
+#define TELA_MAPA             2   /* exploracao do mapa (US03 e US04)         */
+#define TELA_PISTA            3   /* leitura da pista (US05)                  */
+#define TELA_COMPUTADOR1      4   /* afirmacoes da IA (US06)                  */
+#define TELA_COMPUTADOR2      5   /* filtro de confianca (US07)               */
+#define TELA_INVENTARIO       6   /* chaves e progresso (tecla I)             */
+#define TELA_CHAVE            7   /* Chave da Verdade obtida (US07)           */
+#define TELA_FIM_FASE         8   /* resumo e "jogar novamente?"              */
+#define TELA_CONFIRMAR_SAIDA  9   /* confirmacao antes de sair                */
+#define TELA_ENCERRAR         10  /* encerra o game loop                      */
+
+/* ----------------------------------------------------------------------------
+ * MENSAGENS DE RETORNO (exibidas no rodape, apos uma acao)
+ * -------------------------------------------------------------------------- */
+#define MSG_NENHUMA         0
+#define MSG_PAREDE          1
+#define MSG_NADA_PROXIMO    2
+#define MSG_C1_BLOQUEADO    3
+#define MSG_C2_BLOQUEADO    4
+#define MSG_PORTA_TRANCADA  5
+#define MSG_SALVAR          6
+#define MSG_ACERTO          7
+#define MSG_ERRO_P          8
+#define MSG_ERRO_NAO_P      9
+#define MSG_ERRO_TABELA     10
+#define MSG_PORTA_ABERTA    11
+
+/* ----------------------------------------------------------------------------
+ * PONTUACAO E REGRAS DA FASE
+ * -------------------------------------------------------------------------- */
+#define PONTOS_PISTA       10
+#define PONTOS_COMPUTADOR  20
+#define PONTOS_CHAVE       30
+#define PONTUACAO_MAXIMA   (PONTOS_PISTA + 2 * PONTOS_COMPUTADOR + PONTOS_CHAVE)
+#define ETAPAS_C1          2   /* C1: julgar p e depois ~p                  */
+#define LINHAS_TABELA      4   /* C2: 4 linhas da tabela-verdade de p ^ q   */
+#define TOTAL_CHAVES       3
+#define FASE_INICIAL       1
 
 /* ----------------------------------------------------------------------------
  * ESTADO DA PARTIDA
