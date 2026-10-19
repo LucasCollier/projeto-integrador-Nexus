@@ -114,4 +114,23 @@ typedef struct {
     EstadoInterface ui;
 } Jogo;
 
+/* ----------------------------------------------------------------------------
+ * FLUXO E REGRAS DO JOGO (jogo.c)
+ * -------------------------------------------------------------------------- */
+
+/* Estado ao abrir o programa: menu inicial, partida zerada. */
+void iniciarJogo(Jogo *jogo);
+
+/* Zera o progresso da fase se "Iniciar jogo" ou "Jogar novamente"
+ * foram escolhidos na volta anterior do game loop. */
+void reiniciarSePedido(Jogo *jogo);
+
+/* Aplica o movimento pendente (W/A/S/D) se a tela atual e o mapa:
+ * move o jogador ou avisa que o caminho esta bloqueado. */
+void aplicarMovimento(Jogo *jogo);
+
+/* Processa uma tecla ja validada para a tela atual: regras, pontuacao,
+ * desafios e transicao para a proxima tela. */
+void processarTecla(Jogo *jogo, char tecla);
+
 #endif /* JOGO_H */
