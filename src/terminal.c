@@ -188,7 +188,7 @@ void desenharTela(const Jogo *jogo) {
             printf("\n  Qual o valor de p ^ q nessa linha?\n");
             printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
         } else {
-            printf("\n  FILTRO CORRIGIDO! A porta D foi destrancada.\n\n");
+            printf("\n  FILTRO CORRIGIDO!%s\n\n", partida->portaAberta ? " A porta D foi destrancada." : "");
             printf("  [E] Voltar ao mapa\n");
         }
 
