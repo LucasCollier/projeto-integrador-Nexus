@@ -159,17 +159,20 @@ static void processarMapa(Jogo *jogo, char tecla) {
 }
 
 /* ----------------------------------------------------------------------------
- * COMPUTADOR C1: julgar p (resposta F) e depois ~p (resposta V)
+ * COMPUTADOR C1: julgar p (VALOR_P_C1 = F) e depois ~p (!VALOR_P_C1 = V)
  * -------------------------------------------------------------------------- */
 static void responderComputador1(Jogo *jogo, char tecla) {
     EstadoJogo *partida = &jogo->partida;
     EstadoInterface *ui = &jogo->ui;
     char respostaEsperada;
+    int valorEsperado;                   /* valor logico de p ou de ~p      */
 
     if (tecla == 'Q' || tecla == 'E') {
         ui->telaAtual = TELA_MAPA;
     } else {
-        respostaEsperada = (partida->etapaComputador1 == 0) ? 'F' : 'V';
+        /* etapa 0: julgar p ; etapa 1: julgar ~p (negacao do mesmo p) */
+        valorEsperado = (partida->etapaComputador1 == 0) ? VALOR_P_C1 : !VALOR_P_C1;
+        respostaEsperada = valorEsperado ? 'V' : 'F';
         if (tecla == respostaEsperada) {
             partida->etapaComputador1++;
             ui->mensagem = MSG_ACERTO;

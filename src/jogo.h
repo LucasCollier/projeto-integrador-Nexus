@@ -61,6 +61,8 @@
 #define PONTOS_CHAVE       30
 #define PONTUACAO_MAXIMA   (PONTOS_PISTA + 2 * PONTOS_COMPUTADOR + PONTOS_CHAVE)
 #define ETAPAS_C1          2   /* C1: julgar p e depois ~p                  */
+#define VALOR_P_C1         0   /* C1: p = "servidor ligado"; a pista diz que
+                                * foi desligado, entao p e F (0)           */
 #define LINHAS_TABELA      4   /* C2: 4 linhas da tabela-verdade de p ^ q   */
 #define TOTAL_CHAVES       3
 #define FASE_INICIAL       1
