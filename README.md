@@ -308,19 +308,22 @@ Toda leitura de tecla fica dentro de um laço while, que só termina quando a te
 
 ### 🏃 Sprint atual (FDS)
 
-*Week 12 (17/10 a 23/10):* Entrega 3 de FDS
+*Week 13e14 (26/10 a 06/11):* Entrega 4 de FDS
 
-<img width="1532" height="455" alt="image" src="https://github.com/user-attachments/assets/a64e3558-4caf-4ea0-a0fa-824a6d230f24" />
-
+<img width="1569" height="707" alt="image" src="https://github.com/user-attachments/assets/a2a100a5-e08c-4412-881a-dbd75c8e626e" />
 
 ### 📋 Backlog (FDS)
 
 <img width="1527" height="618" alt="image" src="https://github.com/user-attachments/assets/5a438a57-4d87-4bc6-ba3e-df2e03ccd2fb" />
 
 
-### Screencast (FDS)
+### Screencast (FDS) - Entrega 3
 
 https://drive.google.com/file/d/1eNFy9aUQpbELpfwjV-a6egrFYfncJwG8/view?usp=drivesdk
+
+### Screencast (FDS) - Entrega 4
+
+https://drive.google.com/file/d/1XeyO1ZS0Zp9XKz_Lj7U1RG53p1rWexsV/view?usp=sharing
 
 ---
 
