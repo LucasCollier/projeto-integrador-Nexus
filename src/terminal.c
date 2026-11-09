@@ -140,6 +140,7 @@ void desenharTela(const Jogo *jogo) {
         /* ---------- COMPUTADOR C1 - afirmacoes da IA (US06) ---------- */
         printf("  COMPUTADOR C1 - AFIRMACOES DA IA NEXUS\n");
         printf(LINHA_FINA);
+        printf("  Legenda: ~ negacao  ^ conjuncao(E)  V verdadeiro  F falso\n");
         printf("  Pista: \"O servidor principal foi desligado as 22h.\"\n\n");
         printf("  A IA NEXUS afirma:\n");
         printf("   p : \"O servidor principal esta ligado.\"\n");
@@ -149,9 +150,13 @@ void desenharTela(const Jogo *jogo) {
         printf("       Valor logico: %c\n\n", partida->etapaComputador1 > 1 ? (!VALOR_P_C1 ? 'V' : 'F') : '?');
 
         if (partida->etapaComputador1 == 0) {
+            printf("  Raciocinio: a pista fala sobre o servidor; relacione-a\n");
+            printf("  com a proposicao p antes de julgar seu valor logico.\n\n");
             printf("  Qual o valor logico de p?\n");
             printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
         } else if (partida->etapaComputador1 == 1) {
+            printf("  Raciocinio: a pista diz que o servidor foi DESLIGADO;\n");
+            printf("  logo, a proposicao p (\"esta ligado\") e falsa. E a ~p?\n\n");
             printf("  Qual o valor logico de ~p (negacao de p)?\n");
             printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
         } else {
@@ -164,6 +169,7 @@ void desenharTela(const Jogo *jogo) {
         /* ---------- COMPUTADOR C2 - filtro de confianca (US07) ---------- */
         printf("  COMPUTADOR C2 - FILTRO DE CONFIANCA\n");
         printf(LINHA_FINA);
+        printf("  Legenda: ~ negacao  ^ conjuncao(E)  V verdadeiro  F falso\n");
         printf("  Uma resposta da IA so e CONFIAVEL se:\n");
         printf("    p = \"a resposta cita uma fonte\"\n");
         printf("    q = \"o dado confere com as pistas\"\n");
@@ -201,7 +207,11 @@ void desenharTela(const Jogo *jogo) {
         printf("   [%c] Chave da Justica\n\n", partida->chaveDaJustica ? 'X' : ' ');
         printf("   Pista encontrada:        %s\n", partida->pistaEncontrada ? "sim" : "nao");
         printf("   Computadores corrigidos: %d/2\n", partida->computador1Resolvido + partida->computador2Resolvido);
-        printf("   Porta D:                 %s\n\n", partida->portaAberta ? "aberta" : "trancada");
+        printf("   Porta D:                 %s\n", partida->portaAberta ? "aberta" : "trancada");
+        printf("   Regra (conjuncao):       C1(%c) ^ C2(%c) = %c\n\n",
+               partida->computador1Resolvido ? 'V' : 'F',
+               partida->computador2Resolvido ? 'V' : 'F',
+               partida->portaAberta ? 'V' : 'F');
         printf("  [I] Fechar inventario\n");
 
     } else if (ui->telaAtual == TELA_CHAVE) {
