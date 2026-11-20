@@ -10,7 +10,7 @@ Erros não retiram pontos nem avançam perguntas; ficam registrados no resumo. T
 ## Compilar e executar
 Requer GCC/MinGW no Windows:
 ```powershell
-gcc -std=c99 -Wall -Wextra -Wpedantic src/nexus.c src/jogo.c src/mapa.c src/terminal.c src/missoes.c -o nexus.exe
+gcc -std=c99 -Wall -Wextra -Wpedantic -Werror src/nexus.c src/jogo.c src/mapa.c src/terminal.c src/missoes.c -o nexus.exe
 .\nexus.exe
 ```
 Controles sem Enter: WASD move, E interage, I inventário, Q retorna/sai com confirmação. V/F responde na missão 1; 1/2/3 na missão 2. P apenas informa que salvamento não está disponível.
@@ -29,7 +29,7 @@ Segunda missão, perguntas em estruturas, vetor de perguntas, matrizes de altern
 
 ## Testar
 ```powershell
-gcc -std=c99 -Wall -Wextra -Wpedantic tests/regras.c src/jogo.c src/mapa.c src/missoes.c -o testes.exe
+gcc -std=c99 -Wall -Wextra -Wpedantic -Werror tests/regras.c src/jogo.c src/mapa.c src/missoes.c -o testes.exe
 .\testes.exe
 ```
 
@@ -564,4 +564,7 @@ As perguntas das duas missões usam a estrutura Pergunta em src/missoes.c. C1/C2
 
 Regressões: compilação C99 sem avisos; duas missões, 140 pontos, erros, reinício, saída e regras de LMC aprovados. As oito telas de C1/C2 tiveram saída textual comparada com a versão anterior, sem diferenças. A execução interativa humana ainda está pendente.
 
-Conferência de links: o pacote local existe; GitHub e os dois vídeos Drive não puderam ser confirmados pela ferramenta web. Figma/Trello e demais links históricos não verificados. Conferir permissões com a equipe. Vídeo específico PIF U2 e confirmação dos integrantes continuam pendentes. As seções históricas da Etapa 1 acima descrevem a versão anterior; o resumo U2 e este fechamento descrevem a versão atual.
+Conferência de links: o pacote local existe; GitHub confirmado pela API: repositório público e PR #5 integrada. Os dois vídeos Drive não puderam ser confirmados pela ferramenta web. Figma/Trello e demais links históricos não verificados. Conferir permissões com a equipe. Vídeo específico PIF U2 e confirmação dos integrantes continuam pendentes. As seções históricas da Etapa 1 acima descrevem a versão anterior; o resumo U2 e este fechamento descrevem a versão atual.
+
+## Evidências finais da PI2-36
+Versão integrada pela [PR #5](https://github.com/joaollima7/projeto-integrador-Nexus/pull/5), commit 4cf4496bb3e066e6aa5e45c24cb336bd522853b3. Veja a [validação final](docs/pif-u2/validacao-final.md): compilação estrita, testes e simulação completa executados; execução interativa bloqueada pela política do Windows. Vídeo e conferências externas seguem pendentes. Esta atualização documental ainda é local.

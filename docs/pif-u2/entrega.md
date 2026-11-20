@@ -1,5 +1,5 @@
-﻿# PIF U2 — PI2-33 e PI2-36
-Base: origin/main bd91b92, atualizada em 20/11/2026. Prazo: 25/11/2026.
+# PIF U2 — PI2-33 e PI2-36
+Base integrada: main, commit 4cf4496bb3e066e6aa5e45c24cb336bd522853b3, PR #5 MERGED. Diagnóstico original: bd91b92. Prazo: 25/11/2026.
 
 ## Matriz antes/depois
 | Critério | Antes | Depois | Evidência |
@@ -21,7 +21,7 @@ Base: origin/main bd91b92, atualizada em 20/11/2026. Prazo: 25/11/2026.
 | Reiniciar/sair | ATENDIDO | ATENDIDO | teste de estado |
 | Modularizar menu/perguntas/correção/pontos | PARCIAL | ATENDIDO | terminal/jogo/missoes |
 | Evitar duplicação | PARCIAL | ATENDIDO | corrigir compartilhada; textos de perguntas e pontos centralizados |
-| Código U2 no GitHub | NÃO ATENDIDO | DEPENDE DA EQUIPE | apenas local, push não autorizado |
+| Código U2 no GitHub | NÃO ATENDIDO | ATENDIDO | PR #5 integrada ao main em 4cf4496 |
 | README compilação/execução/novidades | PARCIAL | ATENDIDO | README |
 | Links das demais disciplinas | PARCIAL | DEPENDE DA EQUIPE | FDS preservados, acesso não verificado; confirmar LMC |
 | Vídeo 2–3 minutos e link | DEPENDE DA EQUIPE | DEPENDE DA EQUIPE | PENDENTE |
@@ -37,12 +37,12 @@ APROVADO: compilação C99 com -Wall -Wextra -Wpedantic, sem diagnósticos.
 APROVADO: tests/regras.c percorre desde menu por movimentos, pista, C1, C2, porta, chave, missão 2 e resumo com 140 pontos.
 APROVADO: acertos/erros, entrada inválida no menu e missão 2, pontos, reinício, saída; regressão negação F/V e conjunção V/F/F/F.
 NÃO VERIFICADO: execução visual/manual e captura de teclado real. Os testes chamam as funções de estado, não _getch.
-Comandos reproduzíveis no README. Referências: git log --oneline origin/main..HEAD na branch feat/pif-u2-finalizacao.
+Comandos reproduzíveis no README. Referências integradas: cabfa5a, d029013, fe202e0 e 661f188, merge 4cf4496 (PR #5).
 
 ## PI2-36 — texto de submissão
 A squad NEXUS apresenta duas missões educativas em C: Central da Verdade e Setor de Privacidade. A versão inclui estruturas de dados, modularização, validação e reinício. Evidências reproduzíveis no README.
 Repositório: https://github.com/joaollima7/projeto-integrador-Nexus
-Commit publicado: PENDENTE DE APROVAÇÃO/PUBLICAÇÃO.
+Commit publicado: 4cf4496bb3e066e6aa5e45c24cb336bd522853b3; PR #5 integrada.
 Vídeo PIF U2: PENDENTE.
 Integrantes: confirmar lista histórica do README.
 
@@ -61,13 +61,14 @@ Integrantes: confirmar lista histórica do README.
 - [ ] Validar terminal interativo real.
 - [ ] Conferir links FDS/LMC, integrantes e histórico de participação.
 - [ ] Gravar vídeo e inserir link.
-- [ ] Aprovar/publicar commits e submeter até 25/11/2026.
+- [x] Publicar e integrar os quatro commits pela PR #5.
+- [ ] Completar evidências obrigatórias e submeter até 25/11/2026.
 
 ## Veredito
-GO CONDICIONAL para revisão da equipe. Não é entrega integral concluída: os critérios de implementação estão atendidos; permanecem validação interativa humana e entregáveis externos. Nenhum push, PR, merge, Jira ou publicação executado.
+GO CONDICIONAL para revisão da equipe. Não é entrega integral concluída: os critérios de implementação estão atendidos; permanecem validação interativa humana e entregáveis externos. Publicação e merge do código realizados pela PR #5. Jira não modificado.
 
 ## Fechamento técnico complementar
-Commits anteriores preservados: cabfa5a e d029013. Correção complementar registrada no commit mais recente desta branch (consultar git log -1).
+Commits anteriores preservados: cabfa5a e d029013. Correção complementar em fe202e0; acentuação do README corrigida em 661f188.
 - responderComputador1 e responderComputador2 usam corrigir e somam Pergunta.pontos antes de avançar. Mantidos 0/20 pontos em C1 e 0/0/0/20 em C2; pista 10 e chave 30 permanecem recompensas de exploração, não perguntas.
 - desenharTela usa Pergunta.texto/alternativas/resposta. Explicações pedagógicas e regras da porta foram preservadas.
 - APROVADO: C99 com -Wall -Wextra -Wpedantic e também -Werror, sem avisos.
@@ -79,4 +80,7 @@ Commits anteriores preservados: cabfa5a e d029013. Correção complementar regis
 O link relativo README -> docs/pif-u2/entrega.md existe. Consulta web ao repositório retornou Cache miss; ambos os screencasts Drive retornaram inacessível pela ferramenta. Esses resultados não comprovam links quebrados: acesso público não confirmado. Figma/Trello e demais links históricos não verificados. Nenhum endereço inventado ou substituído. Confirmar também artefato de LMC com a equipe.
 
 ### Pendências humanas e publicação
-Vídeo PIF U2 de 2–3 minutos e URL; confirmação de integrantes/participação; execução interativa real no Windows; conferência de acesso aos artefatos FDS/LMC. Publicação depende da autorização do responsável. GO para revisão/publicação do código após autorização; GO CONDICIONAL para submissão acadêmica. Nenhum push, PR, merge ou Jira realizado.
+Vídeo PIF U2 de 2–3 minutos e URL; confirmação de integrantes/participação; execução interativa real no Windows; conferência de acesso aos artefatos FDS/LMC. Código já publicado; a nova revisão documental permanece local e depende de autorização para publicação. GO para revisão/publicação do código após autorização; GO CONDICIONAL para submissão acadêmica. PR #5 integrada; Jira não modificado.
+
+## Validação autônoma posterior ao merge
+Consulte [evidências executadas, roteiro definitivo e texto Jira](validacao-final.md). Compilação e testes foram reexecutados; simulação do programa completo aprovada. Execução interativa bloqueada por política Windows. Veredito atualizado: NO-GO para entrega acadêmica integral enquanto faltar vídeo e confirmação externa. Atualização documental apenas local.
