@@ -1,3 +1,43 @@
+# NEXUS ? PIF Unidade 2
+Jogo educativo em C para terminal Windows, squad NEXUS, Projeto Integrador CESAR School.
+
+## Vers?o jog?vel
+1. **Central da Verdade:** explorar, ler a pista, corrigir nega??o no C1 e conjun??o no C2, abrir a porta e coletar a Chave da Verdade (80 pontos). C1 e C2 s?o etapas de uma miss?o.
+2. **Setor de Privacidade:** ap?s a chave, pressionar E e corrigir tr?s decis?es da IA sobre minimiza??o de dados, autoriza??o e anonimiza??o. A terceira resposta correta entrega a Chave da Privacidade (+60 pontos).
+
+Erros n?o retiram pontos nem avan?am perguntas; ficam registrados no resumo. Total: 140 pontos. Ao concluir, 1 reinicia, 2 volta ao menu, 3 sai.
+
+## Compilar e executar
+Requer GCC/MinGW no Windows:
+```powershell
+gcc -std=c99 -Wall -Wextra -Wpedantic src/nexus.c src/jogo.c src/mapa.c src/terminal.c src/missoes.c -o nexus.exe
+.\nexus.exe
+```
+Controles sem Enter: WASD move, E interage, I invent?rio, Q retorna/sai com confirma??o. V/F responde na miss?o 1; 1/2/3 na miss?o 2. P apenas informa que salvamento n?o est? dispon?vel.
+
+## Novidades e conte?dos U2
+Segunda miss?o, perguntas em estruturas, vetor de perguntas, matrizes de alternativas e tabela l?gica, enum de resultado, switch no menu e string.h (strchr sobre string constante terminada em NUL, sem c?pias). Permanecem if/else, tern?rio, fun??es com par?metros/retorno, prot?tipos, typedef struct e modulariza??o.
+
+## Arquivos
+- src/nexus.c: la?o principal.
+- src/jogo.c e .h: estado, progress?o e pontua??o.
+- src/mapa.c e .h: colis?es e intera??o.
+- src/terminal.c e .h: telas e valida??o de teclas.
+- src/missoes.c e .h: dados dos desafios e corre??o da miss?o 2.
+- tests/regras.c: testes automatizados de regras e percurso completo.
+- [Pacote PI2-33 e PI2-36](docs/pif-u2/entrega.md): matriz antes/depois, evid?ncias, roteiro e pend?ncias.
+
+## Testar
+```powershell
+gcc -std=c99 -Wall -Wextra -Wpedantic tests/regras.c src/jogo.c src/mapa.c src/missoes.c -o testes.exe
+.\testes.exe
+```
+
+## Limita??es e demonstra??o
+Somente Windows (conio.h). N?o h? salvamento, Haskell, terceira miss?o nem escape final nesta entrega. O invent?rio ainda reserva uma chave da Justi?a futura. Testes automatizados n?o comprovam desenho nem captura real de teclado; fazer a demonstra??o conforme roteiro do pacote. Os links hist?ricos abaixo foram preservados, mas acesso/permiss?es precisam de confer?ncia da equipe. V?deo espec?fico de PIF U2: **PENDENTE**.
+
+[Reposit?rio da squad](https://github.com/joaollima7/projeto-integrador-Nexus)
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1108ca33-4437-470d-86ca-d7bef468be8a" />
 
 ## 📑 Sumário
