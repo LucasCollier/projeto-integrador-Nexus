@@ -12,6 +12,7 @@
 
 #include "jogo.h"
 #include "mapa.h"
+#include "missoes.h"
 
 /* ----------------------------------------------------------------------------
  * INICIALIZACAO: estado do jogo ao abrir o programa
@@ -25,6 +26,8 @@ void iniciarJogo(Jogo *jogo) {
     partida->jogadorColuna = INICIO_COLUNA;
     partida->pontos = 0;
     partida->faseAtual = FASE_INICIAL;
+        partida->perguntaPrivacidade = 0;
+        partida->chaveDaPrivacidade = 0;
     partida->chaveDaVerdade = 0;
     partida->chaveDaPrivacidade = 0;
     partida->chaveDaJustica = 0;
@@ -66,6 +69,8 @@ void reiniciarSePedido(Jogo *jogo) {
         partida->destinoColuna = partida->jogadorColuna;
         partida->pontos = 0;
         partida->faseAtual = FASE_INICIAL;
+        partida->perguntaPrivacidade = 0;
+        partida->chaveDaPrivacidade = 0;
         partida->chaveDaVerdade = 0;
         partida->pistaEncontrada = 0;
         partida->etapaComputador1 = 0;
@@ -173,14 +178,12 @@ static void responderComputador1(Jogo *jogo, char tecla) {
     EstadoJogo *partida = &jogo->partida;
     EstadoInterface *ui = &jogo->ui;
     char respostaEsperada;
-    int valorEsperado;                   /* valor logico de p ou de ~p      */
 
     if (tecla == 'Q' || tecla == 'E') {
         ui->telaAtual = TELA_MAPA;
     } else {
         /* etapa 0: julgar p ; etapa 1: julgar ~p (negacao do mesmo p) */
-        valorEsperado = (partida->etapaComputador1 == 0) ? VALOR_P_C1 : !VALOR_P_C1;
-        respostaEsperada = valorEsperado ? 'V' : 'F';
+        respostaEsperada = verdade[partida->etapaComputador1].resposta;
         if (tecla == respostaEsperada) {
             partida->etapaComputador1++;
             ui->mensagem = MSG_ACERTO;
@@ -203,14 +206,11 @@ static void responderComputador2(Jogo *jogo, char tecla) {
     EstadoJogo *partida = &jogo->partida;
     EstadoInterface *ui = &jogo->ui;
     char respostaEsperada;
-    int valorP, valorQ;                  /* linha atual da tabela-verdade   */
 
     if (tecla == 'Q' || tecla == 'E') {
         ui->telaAtual = TELA_MAPA;
     } else {
-        valorP = (partida->linhaTabela < 2);
-        valorQ = (partida->linhaTabela % 2 == 0);
-        respostaEsperada = (valorP && valorQ) ? 'V' : 'F';
+        respostaEsperada = verdade[2 + partida->linhaTabela].resposta;
         if (tecla == respostaEsperada) {
             partida->linhaTabela++;
             ui->mensagem = MSG_ACERTO;
@@ -237,14 +237,11 @@ void processarTecla(Jogo *jogo, char tecla) {
 
     if (ui->telaAtual == TELA_MENU) {
         /* 1 = iniciar, 2 = instrucoes, 3 = sair (com confirmacao) */
-        if (tecla == '1') {
-            ui->reiniciarJogo = 1;
-            ui->telaAtual = TELA_MAPA;
-        } else if (tecla == '2') {
-            ui->telaAtual = TELA_INSTRUCOES;
-        } else {
-            ui->origemConfirmacao = TELA_MENU;
-            ui->telaAtual = TELA_CONFIRMAR_SAIDA;
+        switch (tecla) {
+        case '1': ui->reiniciarJogo = 1; ui->telaAtual = TELA_MAPA; break;
+        case '2': ui->telaAtual = TELA_INSTRUCOES; break;
+        case '3': ui->origemConfirmacao = TELA_MENU; ui->telaAtual = TELA_CONFIRMAR_SAIDA; break;
+        default: break;
         }
 
     } else if (ui->telaAtual == TELA_INSTRUCOES) {
@@ -266,8 +263,24 @@ void processarTecla(Jogo *jogo, char tecla) {
         ui->telaAtual = TELA_MAPA;
 
     } else if (ui->telaAtual == TELA_CHAVE) {
-        ui->telaAtual = TELA_FIM_FASE;
+        jogo->partida.faseAtual = 2;
+        ui->telaAtual = TELA_PRIVACIDADE;
 
+    } else if (ui->telaAtual == TELA_PRIVACIDADE) {
+        EstadoJogo *p = &jogo->partida;
+        Resultado r = corrigir(&privacidade[p->perguntaPrivacidade], tecla);
+        if (r == CORRETA) {
+            p->pontos += privacidade[p->perguntaPrivacidade].pontos;
+            p->perguntaPrivacidade++;
+            ui->mensagem = MSG_ACERTO;
+            if (p->perguntaPrivacidade == 3) {
+                p->chaveDaPrivacidade = 1;
+                ui->telaAtual = TELA_FIM_FASE;
+            }
+        } else if (r == INCORRETA) {
+            p->respostasIncorretas++;
+            ui->mensagem = MSG_ERRO_PRIVACIDADE;
+        }
     } else if (ui->telaAtual == TELA_FIM_FASE) {
         /* 1 = jogar novamente, 2 = menu, 3 = sair */
         if (tecla == '1') {
