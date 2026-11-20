@@ -14,6 +14,7 @@
 #include <conio.h>    /* _getch(): le uma tecla na hora, sem precisar de ENTER */
 #include "terminal.h"
 #include "mapa.h"
+#include "missoes.h"
 
 /* ----------------------------------------------------------------------------
  * LEITURA DE TECLAS (Windows)
@@ -63,8 +64,8 @@ void desenharTela(const Jogo *jogo) {
         printf(SEPARADOR);
         printf("  Voce esta preso em um sistema digital controlado\n");
         printf("  por uma Inteligencia Artificial chamada NEXUS.\n");
-        printf("  Corrija os erros do sistema e reuna as tres chaves\n");
-        printf("  para escapar.\n\n");
+        printf("  Corrija os erros do sistema e recupere duas chaves\n");
+        printf("  nesta entrega U2.\n\n");
         printf("    [1] INICIAR JOGO\n");
         printf("    [2] INSTRUCOES\n");
         printf("    [3] SAIR\n");
@@ -79,7 +80,7 @@ void desenharTela(const Jogo *jogo) {
         printf("    A - Esquerda        D - Direita\n");
         printf("    E - Interagir com um objeto proximo\n");
         printf("    I - Inventario\n");
-        printf("    P - Salvar progresso\n");
+        printf("    P - Informacao sobre salvamento (indisponivel)\n");
         printf("    Q - Sair\n\n");
         printf("  Simbolos do mapa:\n");
         printf("    P jogador   # parede   . chao   ? pista\n");
@@ -144,21 +145,23 @@ void desenharTela(const Jogo *jogo) {
         printf("  Pista: \"O servidor principal foi desligado as 22h.\"\n\n");
         printf("  A IA NEXUS afirma:\n");
         printf("   p : \"O servidor principal esta ligado.\"\n");
-        printf("       Valor logico: %c\n", partida->etapaComputador1 > 0 ? (VALOR_P_C1 ? 'V' : 'F') : '?');
+        printf("       Valor logico: %c\n", partida->etapaComputador1 > 0 ? verdade[0].resposta : '?');
         printf("   ~p: \"Nao e verdade que o servidor principal\n");
         printf("        esta ligado.\"\n");
-        printf("       Valor logico: %c\n\n", partida->etapaComputador1 > 1 ? (!VALOR_P_C1 ? 'V' : 'F') : '?');
+        printf("       Valor logico: %c\n\n", partida->etapaComputador1 > 1 ? verdade[1].resposta : '?');
 
         if (partida->etapaComputador1 == 0) {
             printf("  Raciocinio: a pista fala sobre o servidor; relacione-a\n");
             printf("  com a proposicao p antes de julgar seu valor logico.\n\n");
-            printf("  Qual o valor logico de p?\n");
-            printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            printf("%s", verdade[0].texto);
+            printf("  [V] %s  [F] %s  [Q] Sair do computador\n",
+                   verdade[partida->etapaComputador1].alternativas[0], verdade[partida->etapaComputador1].alternativas[1]);
         } else if (partida->etapaComputador1 == 1) {
             printf("  Raciocinio: a pista diz que o servidor foi DESLIGADO;\n");
             printf("  logo, a proposicao p (\"esta ligado\") e falsa. E a ~p?\n\n");
-            printf("  Qual o valor logico de ~p (negacao de p)?\n");
-            printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            printf("%s", verdade[1].texto);
+            printf("  [V] %s  [F] %s  [Q] Sair do computador\n",
+                   verdade[partida->etapaComputador1].alternativas[0], verdade[partida->etapaComputador1].alternativas[1]);
         } else {
             printf("  SISTEMA CORRIGIDO! A afirmacao p era uma ALUCINACAO:\n");
             printf("  parecia certa, mas contradiz a pista.\n\n");
@@ -178,11 +181,11 @@ void desenharTela(const Jogo *jogo) {
         printf("       p | q | p ^ q\n");
         printf("      ---+---+-------\n");
         for (linhaExibida = 0; linhaExibida < LINHAS_TABELA; linhaExibida++) {
-            valorP = (linhaExibida < 2);           /* linhas 0 e 1: p = V */
-            valorQ = (linhaExibida % 2 == 0);      /* linhas pares: q = V */
+            valorP = tabelaConjuncao[linhaExibida][0];           /* linhas 0 e 1: p = V */
+            valorQ = tabelaConjuncao[linhaExibida][1];      /* linhas pares: q = V */
             printf("       %c | %c |   ", valorP ? 'V' : 'F', valorQ ? 'V' : 'F');
             if (linhaExibida < partida->linhaTabela) {
-                printf("%c\n", (valorP && valorQ) ? 'V' : 'F');   /* ja respondida */
+                printf("%c\n", verdade[2 + linhaExibida].resposta);   /* ja respondida */
             } else if (linhaExibida == partida->linhaTabela) {
                 printf("?   <- sua vez\n");
             } else {
@@ -191,8 +194,9 @@ void desenharTela(const Jogo *jogo) {
         }
 
         if (partida->linhaTabela < LINHAS_TABELA) {
-            printf("\n  Qual o valor de p ^ q nessa linha?\n");
-            printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            printf("%s", verdade[2 + partida->linhaTabela].texto);
+            printf("  [V] %s  [F] %s  [Q] Sair do computador\n",
+                   verdade[2 + partida->linhaTabela].alternativas[0], verdade[2 + partida->linhaTabela].alternativas[1]);
         } else {
             printf("\n  FILTRO CORRIGIDO!%s\n\n", partida->portaAberta ? " A porta D foi destrancada." : "");
             printf("  [E] Voltar ao mapa\n");
@@ -223,12 +227,19 @@ void desenharTela(const Jogo *jogo) {
         printf("  informacoes confiaveis.\n\n");
         printf("  [E] Continuar\n");
 
+    } else if (ui->telaAtual == TELA_PRIVACIDADE) {
+        const Pergunta *p = &privacidade[partida->perguntaPrivacidade];
+        printf("MISSAO 2 - SETOR DE PRIVACIDADE\n");
+        printf("Objetivo: corrigir tres decisoes e obter a Chave da Privacidade.\n");
+        printf("Politica: minimizar dados; acesso exige autorizacao E necessidade.\n");
+        printf("Desafio %d/3 | Pontos %d\n%s\n", partida->perguntaPrivacidade + 1, partida->pontos, p->texto);
+        for (linha = 0; linha < 3; linha++) printf("[%d] %s\n", linha + 1, p->alternativas[linha]);
     } else if (ui->telaAtual == TELA_FIM_FASE) {
         /* ---------- FIM DA FASE - jogar novamente? ---------- */
         printf(SEPARADOR);
-        printf("  FASE 1 CONCLUIDA!\n");
+        printf("  DUAS MISSOES CONCLUIDAS! Chave da Privacidade obtida.\n");
         printf(SEPARADOR);
-        printf("  Pontuacao:            %d de %d pontos\n", partida->pontos, PONTUACAO_MAXIMA);
+        printf("  Pontuacao:            %d de %d pontos\n", partida->pontos, PONTUACAO_MAXIMA + 60);
         printf("  Respostas incorretas: %d\n", partida->respostasIncorretas);
         printf("  Desempenho:           ");
         if (partida->respostasIncorretas == 0) {
@@ -238,8 +249,8 @@ void desenharTela(const Jogo *jogo) {
         } else {
             printf("continue praticando!\n\n");
         }
-        printf("  As fases 2 (Setor de Privacidade) e 3 (Nucleo da\n");
-        printf("  Justica) estarao disponiveis nas proximas etapas.\n\n");
+        printf("  Entrega U2 concluida. A terceira fase e o escape\n");
+        printf("  nao fazem parte desta versao.\n\n");
         printf("  Deseja jogar novamente?\n");
         printf("    [1] Jogar novamente\n");
         printf("    [2] Voltar ao menu\n");
@@ -258,7 +269,7 @@ void desenharTela(const Jogo *jogo) {
     /* Mensagem do rodape: resultado da ultima acao */
     if (ui->mensagem != MSG_NENHUMA) {
         printf("\n  >> ");
-        if (ui->mensagem == MSG_PAREDE) {
+        if (ui->mensagem == MSG_ERRO_PRIVACIDADE) { printf("Incorreto. Revise a politica do setor.\n"); } else if (ui->mensagem == MSG_PAREDE) {
             printf("Caminho bloqueado! Voce nao pode atravessar obstaculos.\n");
         } else if (ui->mensagem == MSG_NADA_PROXIMO) {
             printf("Nada para interagir aqui. Chegue perto de ?, C, D ou K.\n");
@@ -285,7 +296,7 @@ void desenharTela(const Jogo *jogo) {
 
     /* Teclas aceitas na tela atual */
     printf("\n  Teclas aceitas: ");
-    if (ui->telaAtual == TELA_MENU || ui->telaAtual == TELA_FIM_FASE) {
+    if (ui->telaAtual == TELA_PRIVACIDADE || ui->telaAtual == TELA_MENU || ui->telaAtual == TELA_FIM_FASE) {
         printf("1, 2 ou 3\n");
     } else if (ui->telaAtual == TELA_INSTRUCOES) {
         printf("qualquer tecla\n");
@@ -340,7 +351,7 @@ char lerTecla(const Jogo *jogo) {
         /* A tecla e valida para a tela atual? */
         if (tecla == ' ' || tecla == '\n' || tecla == '\r' || tecla == '\t') {
             entradaValida = 0;           /* espacos, ENTER e setas sao ignorados */
-        } else if (ui->telaAtual == TELA_MENU || ui->telaAtual == TELA_FIM_FASE) {
+        } else if (ui->telaAtual == TELA_PRIVACIDADE || ui->telaAtual == TELA_MENU || ui->telaAtual == TELA_FIM_FASE) {
             entradaValida = (tecla >= '1' && tecla <= '3');
         } else if (ui->telaAtual == TELA_INSTRUCOES) {
             entradaValida = 1;

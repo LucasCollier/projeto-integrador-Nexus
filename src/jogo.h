@@ -25,6 +25,7 @@
  * O jogo e uma "maquina de estados": telaAtual guarda em qual tela o jogador
  * esta. Cada tela tem um numero (constante) diferente.
  * -------------------------------------------------------------------------- */
+#define TELA_PRIVACIDADE 11
 #define TELA_MENU             0   /* menu inicial (US01)                      */
 #define TELA_INSTRUCOES       1   /* lista de comandos (US02)                 */
 #define TELA_MAPA             2   /* exploracao do mapa (US03 e US04)         */
@@ -40,6 +41,7 @@
 /* ----------------------------------------------------------------------------
  * MENSAGENS DE RETORNO (exibidas no rodape, apos uma acao)
  * -------------------------------------------------------------------------- */
+#define MSG_ERRO_PRIVACIDADE 12
 #define MSG_NENHUMA         0
 #define MSG_PAREDE          1
 #define MSG_NADA_PROXIMO    2
@@ -76,6 +78,7 @@ typedef struct {
     int jogadorLinha;           /* posicao atual no mapa           */
     int jogadorColuna;
     int pontos;                 /* pontuacao acumulada             */
+    int perguntaPrivacidade;
     int faseAtual;              /* fase em que o jogador esta      */
     int chaveDaVerdade;         /* 1 = chave obtida, 0 = nao       */
     int chaveDaPrivacidade;     /* fase 2 (proximas etapas)        */

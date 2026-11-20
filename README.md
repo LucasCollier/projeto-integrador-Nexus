@@ -1,3 +1,43 @@
+# NEXUS — PIF Unidade 2
+Jogo educativo em C para terminal Windows, squad NEXUS, Projeto Integrador CESAR School.
+
+## Versão jogável
+1. **Central da Verdade:** explorar, ler a pista, corrigir negação no C1 e conjunção no C2, abrir a porta e coletar a Chave da Verdade (80 pontos). C1 e C2 são etapas de uma missão.
+2. **Setor de Privacidade:** após a chave, pressionar E e corrigir três decisões da IA sobre minimização de dados, autorização e anonimização. A terceira resposta correta entrega a Chave da Privacidade (+60 pontos).
+
+Erros não retiram pontos nem avançam perguntas; ficam registrados no resumo. Total: 140 pontos. Ao concluir, 1 reinicia, 2 volta ao menu, 3 sai.
+
+## Compilar e executar
+Requer GCC/MinGW no Windows:
+```powershell
+gcc -std=c99 -Wall -Wextra -Wpedantic src/nexus.c src/jogo.c src/mapa.c src/terminal.c src/missoes.c -o nexus.exe
+.\nexus.exe
+```
+Controles sem Enter: WASD move, E interage, I inventário, Q retorna/sai com confirmação. V/F responde na missão 1; 1/2/3 na missão 2. P apenas informa que salvamento não está disponível.
+
+## Novidades e conteúdos U2
+Segunda missão, perguntas em estruturas, vetor de perguntas, matrizes de alternativas e tabela lógica, enum de resultado, switch no menu e string.h (strchr sobre string constante terminada em NUL, sem cópias). Permanecem if/else, ternário, funções com parâmetros/retorno, protótipos, typedef struct e modularização.
+
+## Arquivos
+- src/nexus.c: laço principal.
+- src/jogo.c e .h: estado, progressão e pontuação.
+- src/mapa.c e .h: colisões e interação.
+- src/terminal.c e .h: telas e validação de teclas.
+- src/missoes.c e .h: dados dos desafios e correção da missão 2.
+- tests/regras.c: testes automatizados de regras e percurso completo.
+- [Pacote PI2-33 e PI2-36](docs/pif-u2/entrega.md): matriz antes/depois, evidências, roteiro e pendências.
+
+## Testar
+```powershell
+gcc -std=c99 -Wall -Wextra -Wpedantic tests/regras.c src/jogo.c src/mapa.c src/missoes.c -o testes.exe
+.\testes.exe
+```
+
+## Limitações e demonstração
+Somente Windows (conio.h). Não há salvamento, Haskell, terceira missão nem escape final nesta entrega. O inventário ainda reserva uma chave da Justiça futura. Testes automatizados não comprovam desenho nem captura real de teclado; fazer a demonstração conforme roteiro do pacote. Os links históricos abaixo foram preservados, mas acesso/permissões precisam de conferência da equipe. Vídeo específico de PIF U2: **PENDENTE**.
+
+[Repositório da squad](https://github.com/joaollima7/projeto-integrador-Nexus)
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1108ca33-4437-470d-86ca-d7bef468be8a" />
 
 ## 📑 Sumário
@@ -518,3 +558,10 @@ A missão é simples: encontrar as três chaves, corrigir os erros do sistema e 
 - **Link do Protótipo Navegável Lo-Fi:** https://www.figma.com/design/KaKeypsS67eQHAWmZoUpev/NEXUS-—-Fluxo-de-Telas?node-id=0-1&t=RsjCwZyaYFWcjrjL-1
 - **Link do Diagrama de Atividades:** https://www.figma.com/board/ECGOhLU5rYH2vMqNarHMec/Diagramas-de-atividades---FDS?node-id=0-1&t=GH0cTbkJmIx6VAhe-1
 - **Screencasts:** [Entrega 3](https://drive.google.com/file/d/1eNFy9aUQpbELpfwjV-a6egrFYfncJwG8/view?usp=drivesdk) · [Entrega 4](https://drive.google.com/file/d/1XeyO1ZS0Zp9XKz_Lj7U1RG53p1rWexsV/view?usp=sharing)
+
+## Fechamento técnico PIF U2
+As perguntas das duas missões usam a estrutura Pergunta em src/missoes.c. C1/C2 agora consomem os enunciados, alternativas, respostas e pontos dessa estrutura, mantendo a saída textual e as recompensas originais. A correção é compartilhada com a Missão 2.
+
+Regressões: compilação C99 sem avisos; duas missões, 140 pontos, erros, reinício, saída e regras de LMC aprovados. As oito telas de C1/C2 tiveram saída textual comparada com a versão anterior, sem diferenças. A execução interativa humana ainda está pendente.
+
+Conferência de links: o pacote local existe; GitHub e os dois vídeos Drive não puderam ser confirmados pela ferramenta web. Figma/Trello e demais links históricos não verificados. Conferir permissões com a equipe. Vídeo específico PIF U2 e confirmação dos integrantes continuam pendentes. As seções históricas da Etapa 1 acima descrevem a versão anterior; o resumo U2 e este fechamento descrevem a versão atual.
