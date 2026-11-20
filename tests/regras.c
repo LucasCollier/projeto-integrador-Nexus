@@ -4,7 +4,26 @@
 #include "../src/missoes.h"
 static void passos(Jogo *j, const char *s) { for (; *s; s++) { processarTecla(j, *s); aplicarMovimento(j); } }
 int main(void) {
- Jogo j; iniciarJogo(&j);
+ Jogo j; int i;
+ /* Oraculos independentes: negacao e as quatro linhas da conjuncao. */
+ assert(verdade[0].resposta == 'F' && verdade[1].resposta == 'V');
+ for (i = 0; i < 6; i++) {
+     int pontosAntes, errosAntes;
+     iniciarJogo(&j);
+     j.ui.telaAtual = i < 2 ? TELA_COMPUTADOR1 : TELA_COMPUTADOR2;
+     j.partida.etapaComputador1 = i < 2 ? i : 2;
+     j.partida.linhaTabela = i < 2 ? 0 : i - 2;
+     j.partida.computador1Resolvido = i >= 2;
+     pontosAntes = j.partida.pontos; errosAntes = j.partida.respostasIncorretas;
+     processarTecla(&j, verdade[i].resposta == 'V' ? 'F' : 'V');
+     assert(j.partida.pontos == pontosAntes && j.partida.respostasIncorretas == errosAntes + 1);
+     processarTecla(&j, verdade[i].resposta);
+     assert(j.partida.pontos == ((i == 1 || i == 5) ? 20 : 0));
+     assert(j.partida.portaAberta == (i == 5));
+     assert(corrigir(&verdade[i], '1') == INVALIDA);
+     if (i >= 2) assert(verdade[i].resposta == ((tabelaConjuncao[i-2][0] && tabelaConjuncao[i-2][1]) ? 'V' : 'F'));
+ }
+ iniciarJogo(&j);
  processarTecla(&j,'x'); assert(j.ui.telaAtual == TELA_MENU);
  processarTecla(&j,'1'); reiniciarSePedido(&j);
  /* Teste de regras; posicionamento e terminal real nao simulados. */

@@ -558,3 +558,10 @@ A missão é simples: encontrar as três chaves, corrigir os erros do sistema e 
 - **Link do Protótipo Navegável Lo-Fi:** https://www.figma.com/design/KaKeypsS67eQHAWmZoUpev/NEXUS-—-Fluxo-de-Telas?node-id=0-1&t=RsjCwZyaYFWcjrjL-1
 - **Link do Diagrama de Atividades:** https://www.figma.com/board/ECGOhLU5rYH2vMqNarHMec/Diagramas-de-atividades---FDS?node-id=0-1&t=GH0cTbkJmIx6VAhe-1
 - **Screencasts:** [Entrega 3](https://drive.google.com/file/d/1eNFy9aUQpbELpfwjV-a6egrFYfncJwG8/view?usp=drivesdk) · [Entrega 4](https://drive.google.com/file/d/1XeyO1ZS0Zp9XKz_Lj7U1RG53p1rWexsV/view?usp=sharing)
+
+## Fechamento técnico PIF U2
+As perguntas das duas missões usam a estrutura Pergunta em src/missoes.c. C1/C2 agora consomem os enunciados, alternativas, respostas e pontos dessa estrutura, mantendo a saída textual e as recompensas originais. A correção é compartilhada com a Missão 2.
+
+Regressões: compilação C99 sem avisos; duas missões, 140 pontos, erros, reinício, saída e regras de LMC aprovados. As oito telas de C1/C2 tiveram saída textual comparada com a versão anterior, sem diferenças. A execução interativa humana ainda está pendente.
+
+Conferência de links: o pacote local existe; GitHub e os dois vídeos Drive não puderam ser confirmados pela ferramenta web. Figma/Trello e demais links históricos não verificados. Conferir permissões com a equipe. Vídeo específico PIF U2 e confirmação dos integrantes continuam pendentes. As seções históricas da Etapa 1 acima descrevem a versão anterior; o resumo U2 e este fechamento descrevem a versão atual.

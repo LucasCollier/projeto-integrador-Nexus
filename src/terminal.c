@@ -145,21 +145,23 @@ void desenharTela(const Jogo *jogo) {
         printf("  Pista: \"O servidor principal foi desligado as 22h.\"\n\n");
         printf("  A IA NEXUS afirma:\n");
         printf("   p : \"O servidor principal esta ligado.\"\n");
-        printf("       Valor logico: %c\n", partida->etapaComputador1 > 0 ? (VALOR_P_C1 ? 'V' : 'F') : '?');
+        printf("       Valor logico: %c\n", partida->etapaComputador1 > 0 ? verdade[0].resposta : '?');
         printf("   ~p: \"Nao e verdade que o servidor principal\n");
         printf("        esta ligado.\"\n");
-        printf("       Valor logico: %c\n\n", partida->etapaComputador1 > 1 ? (!VALOR_P_C1 ? 'V' : 'F') : '?');
+        printf("       Valor logico: %c\n\n", partida->etapaComputador1 > 1 ? verdade[1].resposta : '?');
 
         if (partida->etapaComputador1 == 0) {
             printf("  Raciocinio: a pista fala sobre o servidor; relacione-a\n");
             printf("  com a proposicao p antes de julgar seu valor logico.\n\n");
-            printf("  Qual o valor logico de p?\n");
-            printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            printf("%s", verdade[0].texto);
+            printf("  [V] %s  [F] %s  [Q] Sair do computador\n",
+                   verdade[partida->etapaComputador1].alternativas[0], verdade[partida->etapaComputador1].alternativas[1]);
         } else if (partida->etapaComputador1 == 1) {
             printf("  Raciocinio: a pista diz que o servidor foi DESLIGADO;\n");
             printf("  logo, a proposicao p (\"esta ligado\") e falsa. E a ~p?\n\n");
-            printf("  Qual o valor logico de ~p (negacao de p)?\n");
-            printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            printf("%s", verdade[1].texto);
+            printf("  [V] %s  [F] %s  [Q] Sair do computador\n",
+                   verdade[partida->etapaComputador1].alternativas[0], verdade[partida->etapaComputador1].alternativas[1]);
         } else {
             printf("  SISTEMA CORRIGIDO! A afirmacao p era uma ALUCINACAO:\n");
             printf("  parecia certa, mas contradiz a pista.\n\n");
@@ -183,7 +185,7 @@ void desenharTela(const Jogo *jogo) {
             valorQ = tabelaConjuncao[linhaExibida][1];      /* linhas pares: q = V */
             printf("       %c | %c |   ", valorP ? 'V' : 'F', valorQ ? 'V' : 'F');
             if (linhaExibida < partida->linhaTabela) {
-                printf("%c\n", (valorP && valorQ) ? 'V' : 'F');   /* ja respondida */
+                printf("%c\n", verdade[2 + linhaExibida].resposta);   /* ja respondida */
             } else if (linhaExibida == partida->linhaTabela) {
                 printf("?   <- sua vez\n");
             } else {
@@ -192,8 +194,9 @@ void desenharTela(const Jogo *jogo) {
         }
 
         if (partida->linhaTabela < LINHAS_TABELA) {
-            printf("\n  Qual o valor de p ^ q nessa linha?\n");
-            printf("  [V] Verdadeiro  [F] Falso  [Q] Sair do computador\n");
+            printf("%s", verdade[2 + partida->linhaTabela].texto);
+            printf("  [V] %s  [F] %s  [Q] Sair do computador\n",
+                   verdade[2 + partida->linhaTabela].alternativas[0], verdade[2 + partida->linhaTabela].alternativas[1]);
         } else {
             printf("\n  FILTRO CORRIGIDO!%s\n\n", partida->portaAberta ? " A porta D foi destrancada." : "");
             printf("  [E] Voltar ao mapa\n");

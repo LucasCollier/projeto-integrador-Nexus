@@ -16,11 +16,11 @@ Base: origin/main bd91b92, atualizada em 20/11/2026. Prazo: 25/11/2026.
 | Compilar C99 | PARCIAL | ATENDIDO | GCC sem diagnósticos |
 | Terminal interativo real | PARCIAL | PARCIAL | captura _getch e visual não verificados |
 | Duas missões completas | NÃO ATENDIDO | ATENDIDO | Verdade e Privacidade; percurso automatizado |
-| Dados de perguntas/respostas/pontos | NÃO ATENDIDO | PARCIAL | missoes.c; C1 mantém textos na interface e pontos em constantes |
+| Dados de perguntas/respostas/pontos | NÃO ATENDIDO | ATENDIDO | verdade[]: enunciados, alternativas, respostas e pontos consumidos por terminal.c e jogo.c |
 | Validação | ATENDIDO | ATENDIDO | lerTecla e corrigir |
 | Reiniciar/sair | ATENDIDO | ATENDIDO | teste de estado |
 | Modularizar menu/perguntas/correção/pontos | PARCIAL | ATENDIDO | terminal/jogo/missoes |
-| Evitar duplicação | PARCIAL | PARCIAL | missão 2 compartilhada; textos C1 preservados |
+| Evitar duplicação | PARCIAL | ATENDIDO | corrigir compartilhada; textos de perguntas e pontos centralizados |
 | Código U2 no GitHub | NÃO ATENDIDO | DEPENDE DA EQUIPE | apenas local, push não autorizado |
 | README compilação/execução/novidades | PARCIAL | ATENDIDO | README |
 | Links das demais disciplinas | PARCIAL | DEPENDE DA EQUIPE | FDS preservados, acesso não verificado; confirmar LMC |
@@ -57,11 +57,26 @@ Integrantes: confirmar lista histórica do README.
 ## Checklist
 - [x] Atualizar base, branch exclusiva, segunda missão, compilação e testes automatizados.
 - [x] README, matriz, roteiro e texto de submissão.
-- [ ] Revisar organização remanescente dos textos/pontos da missão 1.
+- [x] Centralizar perguntas, alternativas, respostas e pontos da missão 1 em Pergunta.
 - [ ] Validar terminal interativo real.
 - [ ] Conferir links FDS/LMC, integrantes e histórico de participação.
 - [ ] Gravar vídeo e inserir link.
 - [ ] Aprovar/publicar commits e submeter até 25/11/2026.
 
 ## Veredito
-GO CONDICIONAL para revisão da equipe. Não é entrega integral concluída: permanecem itens técnicos parciais e entregáveis externos. Nenhum push, PR, merge, Jira ou publicação executado.
+GO CONDICIONAL para revisão da equipe. Não é entrega integral concluída: os critérios de implementação estão atendidos; permanecem validação interativa humana e entregáveis externos. Nenhum push, PR, merge, Jira ou publicação executado.
+
+## Fechamento técnico complementar
+Commits anteriores preservados: cabfa5a e d029013. Correção complementar registrada no commit mais recente desta branch (consultar git log -1).
+- responderComputador1 e responderComputador2 usam corrigir e somam Pergunta.pontos antes de avançar. Mantidos 0/20 pontos em C1 e 0/0/0/20 em C2; pista 10 e chave 30 permanecem recompensas de exploração, não perguntas.
+- desenharTela usa Pergunta.texto/alternativas/resposta. Explicações pedagógicas e regras da porta foram preservadas.
+- APROVADO: C99 com -Wall -Wextra -Wpedantic e também -Werror, sem avisos.
+- APROVADO: testes/regras.c ampliado verifica erro/acerto em cada uma das seis perguntas, ausência de pontos no erro, negação, quatro linhas da conjunção e porta. Percurso das duas missões confirma 140 pontos, reinício e saída.
+- APROVADO: comparação automatizada da saída textual das oito telas C1/C2 (três estados do C1 e cinco do C2) contra HEAD anterior: saída idêntica. Harness temporário removido; isso não é inspeção visual/manual.
+- Houve bloqueio inicial do executável pela política Windows, inclusive fora do sandbox; após recompilar os testes ampliados, a execução passou normalmente.
+
+### Conferência dos links
+O link relativo README -> docs/pif-u2/entrega.md existe. Consulta web ao repositório retornou Cache miss; ambos os screencasts Drive retornaram inacessível pela ferramenta. Esses resultados não comprovam links quebrados: acesso público não confirmado. Figma/Trello e demais links históricos não verificados. Nenhum endereço inventado ou substituído. Confirmar também artefato de LMC com a equipe.
+
+### Pendências humanas e publicação
+Vídeo PIF U2 de 2–3 minutos e URL; confirmação de integrantes/participação; execução interativa real no Windows; conferência de acesso aos artefatos FDS/LMC. Publicação depende da autorização do responsável. GO para revisão/publicação do código após autorização; GO CONDICIONAL para submissão acadêmica. Nenhum push, PR, merge ou Jira realizado.
